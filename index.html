@@ -38,6 +38,21 @@ body {
   padding: 20px;
 }
 
+.desktop-mode .container {
+  max-width: 1400px;
+}
+
+.desktop-mode iframe {
+  height: 600px;
+}
+
+.desktop-btn {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  background: var(--accent2);
+}
+
 h1 {
   text-align: center;
 }
@@ -151,6 +166,15 @@ h1 {
   <a class="btn" href="https://TU_BLOG.blogspot.com">Cosas de Litax</a>
 </div>
 
+<div class="card">
+  <h2>Ir al blog</h2>
+  <a class="btn" href="https://TU_BLOG.blogspot.com">Cosas de Litax</a>
+
+  <a class="btn desktop-btn" onclick="toggleDesktop()">🖥 Ver versión PC</a>
+
+  <a class="btn desktop-btn" style="background:#555;">💬 Discord (Próximamente)</a>
+</div>
+
 </div>
 
 <script>
@@ -231,6 +255,21 @@ const parent = window.location.hostname;
 
 document.getElementById("twitchFrame").src =
 `https://player.twitch.tv/?channel=${channel}&parent=${parent}`;
+
+function toggleDesktop() {
+  document.body.classList.toggle("desktop-mode");
+
+  if(document.body.classList.contains("desktop-mode")){
+    localStorage.setItem("desktopMode", "on");
+  } else {
+    localStorage.removeItem("desktopMode");
+  }
+}
+
+// mantener modo al recargar
+if(localStorage.getItem("desktopMode") === "on"){
+  document.body.classList.add("desktop-mode");
+}
 </script>
 
 </body>
