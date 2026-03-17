@@ -3,7 +3,7 @@
 <head>
 <link rel="icon" href="/Litax-Home/icon.png">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta id="viewportMeta" name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Base Veneka</title>
 
@@ -36,21 +36,6 @@ body {
   max-width: 900px;
   margin: auto;
   padding: 20px;
-}
-
-.desktop-mode .container {
-  max-width: 1400px;
-}
-
-.desktop-mode iframe {
-  height: 600px;
-}
-
-.desktop-btn {
-  display: block;
-  text-align: center;
-  margin-top: 10px;
-  background: var(--accent2);
 }
 
 h1 {
@@ -89,6 +74,13 @@ h1 {
   box-shadow: 0 0 10px #7a6cff88;
 }
 
+.desktop-btn {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  background: var(--accent2);
+}
+
 .toggle {
   position: fixed;
   top: 10px;
@@ -111,7 +103,6 @@ h1 {
   font-size: 40px;
   text-align: center;
   color: var(--accent2);
-  transition: 0.3s;
 }
 </style>
 </head>
@@ -162,17 +153,19 @@ h1 {
 </div>
 
 <div class="card">
-  <h2>Ir al blog</h2>
-  <a class="btn" href="https://TU_BLOG.blogspot.com">Cosas de Litax</a>
-</div>
+  <h2>Navegación</h2>
 
-<div class="card">
-  <h2>Ir al blog</h2>
-  <a class="btn" href="https://TU_BLOG.blogspot.com">Cosas de Litax</a>
+  <a class="btn" href="https://TU_BLOG.blogspot.com">📝 Cosas de Litax</a>
 
-  <a class="btn desktop-btn" onclick="toggleDesktop()">🖥 Ver versión PC</a>
+  <a class="btn desktop-btn" onclick="setDesktop()">🖥 Ver como computadora</a>
 
-  <a class="btn desktop-btn" style="background:#555;">💬 Discord (Próximamente)</a>
+  <a class="btn desktop-btn" onclick="setMobile()" style="background:#555;">
+    📱 Volver a móvil
+  </a>
+
+  <a class="btn desktop-btn" style="background:#5865F2;">
+    💬 Discord (Próximamente)
+  </a>
 </div>
 
 </div>
@@ -182,9 +175,7 @@ function toggleTheme() {
   document.body.classList.toggle("light");
 }
 
-/* =========================
-   ANIMACIONES SCROLL
-========================= */
+/* ANIMACIONES SCROLL */
 const cards = document.querySelectorAll(".card");
 
 const observer = new IntersectionObserver(entries => {
@@ -197,9 +188,7 @@ const observer = new IntersectionObserver(entries => {
 
 cards.forEach(card => observer.observe(card));
 
-/* =========================
-   VIDEO
-========================= */
+/* VIDEO */
 const channelID = "UC2dwyoEYWTsuUprHKU30s4g";
 
 fetch(`https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feeds/videos.xml?channel_id=${channelID}`)
@@ -210,9 +199,7 @@ fetch(`https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feed
     "https://www.youtube.com/embed/" + videoId;
 });
 
-/* =========================
-   SUBS (MEJORADO + ANIMADO)
-========================= */
+/* SUBS */
 function animateCount(finalNumber){
   let current = 0;
   const increment = finalNumber / 50;
@@ -247,28 +234,555 @@ async function getSubs() {
 
 getSubs();
 
-/* =========================
-   TWITCH
-========================= */
+/* TWITCH */
 const channel = "litaxvt";
 const parent = window.location.hostname;
 
 document.getElementById("twitchFrame").src =
 `https://player.twitch.tv/?channel=${channel}&parent=${parent}`;
 
-function toggleDesktop() {
-  document.body.classList.toggle("desktop-mode");
+/* MODO PC REAL */
+function setDesktop(){
+  localStorage.setItem("viewMode", "desktop");
+  location.reload();
+}
 
-  if(document.body.classList.contains("desktop-mode")){
-    localStorage.setItem("desktopMode", "on");
-  } else {
-    localStorage.removeItem("desktopMode");
+function setMobile(){
+  localStorage.setItem("viewMode", "mobile");
+  location.reload();
+}
+
+const mode = localStorage.getItem("viewMode");
+const viewport = document.getElementById("viewportMeta");
+
+if(mode === "desktop"){
+  viewport.setAttribute("content", "width=1200");
+}
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="es">
+<head>
+<link rel="icon" href="/Litax-Home/icon.png">
+<meta charset="UTF-8">
+<meta id="viewportMeta" name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Base Veneka</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #61267A;
+  --card: #151533;
+  --text: #eaeaff;
+  --accent: #7a6cff;
+  --accent2: #ff4d6d;
+}
+
+.light {
+  --bg: #94A8FF;
+  --card: #ffffff;
+  --text: #111;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Montserrat', sans-serif;
+  scroll-behavior: smooth;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+/* CARDS ANIMADAS */
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease;
+}
+
+.card.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* BOTONES */
+.btn {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: white;
+  margin: 5px;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 10px #7a6cff88;
+}
+
+.desktop-btn {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  background: var(--accent2);
+}
+
+.toggle {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.character {
+  width: 120px;
+  margin: 10px;
+  transition: all 0.3s ease;
+}
+
+.character:hover {
+  transform: scale(1.15) rotate(2deg);
+}
+
+/* SUBS */
+#subCount {
+  font-size: 40px;
+  text-align: center;
+  color: var(--accent2);
+}
+</style>
+</head>
+
+<body>
+
+<div class="toggle" onclick="toggleTheme()">🌙</div>
+
+<div class="container">
+
+<h1>Base Veneka de Litax</h1>
+
+<div class="card">
+  <h2>Redes</h2>
+  <a class="btn" href="https://youtube.com/@litaxvnz" target="_blank">YouTube</a>
+  <a class="btn" href="https://www.twitch.tv/litaxvt" target="_blank">Twitch</a>
+  <a class="btn" href="https://TU_BLOG.blogspot.com">Blog</a>
+</div>
+
+<div class="card">
+  <h2>Suscriptores</h2>
+  <h1 id="subCount">Cargando...</h1>
+</div>
+
+<div class="card">
+  <h2>Último video</h2>
+  <iframe id="ytVideo" width="100%" height="450" allowfullscreen></iframe>
+</div>
+
+<div class="card">
+  <h2>Playlist</h2>
+  <iframe width="100%" height="400"
+  src="https://www.youtube.com/embed/videoseries?list=PLmBkpW2h0oj_rFvsPGHNmVXxQsWFCF0Fg"
+  allowfullscreen>
+  </iframe>
+</div>
+
+<div class="card">
+  <h2>En vivo</h2>
+  <iframe id="twitchFrame" height="400" width="100%"></iframe>
+</div>
+
+<div class="card">
+  <h2>Animes XD</h2>
+  <img class="character" src="134767.png">
+  <img class="character" src="162724.png">
+  <img class="character" src="IMG_20251123_154708_268.png">
+</div>
+
+<div class="card">
+  <h2>Navegación</h2>
+
+  <a class="btn" href="https://TU_BLOG.blogspot.com">📝 Cosas de Litax</a>
+
+  <a class="btn desktop-btn" onclick="setDesktop()">🖥 Ver como computadora</a>
+
+  <a class="btn desktop-btn" onclick="setMobile()" style="background:#555;">
+    📱 Volver a móvil
+  </a>
+
+  <a class="btn desktop-btn" style="background:#5865F2;">
+    💬 Discord (Próximamente)
+  </a>
+</div>
+
+</div>
+
+<script>
+function toggleTheme() {
+  document.body.classList.toggle("light");
+}
+
+/* ANIMACIONES SCROLL */
+const cards = document.querySelectorAll(".card");
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add("show");
+    }
+  });
+});
+
+cards.forEach(card => observer.observe(card));
+
+/* VIDEO */
+const channelID = "UC2dwyoEYWTsuUprHKU30s4g";
+
+fetch(`https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feeds/videos.xml?channel_id=${channelID}`)
+.then(res => res.json())
+.then(data => {
+  const videoId = data.items[0].link.split("v=")[1];
+  document.getElementById("ytVideo").src =
+    "https://www.youtube.com/embed/" + videoId;
+});
+
+/* SUBS */
+function animateCount(finalNumber){
+  let current = 0;
+  const increment = finalNumber / 50;
+
+  const interval = setInterval(() => {
+    current += increment;
+    if(current >= finalNumber){
+      current = finalNumber;
+      clearInterval(interval);
+    }
+    document.getElementById("subCount").innerText =
+      Math.floor(current).toLocaleString();
+  }, 20);
+}
+
+async function getSubs() {
+  try {
+    const res = await fetch(`https://api.socialcounts.org/youtube-live-subscriber-count/${channelID}`);
+    const data = await res.json();
+
+    if(data.est_sub_count){
+      animateCount(data.est_sub_count);
+      return;
+    }
+
+    throw "fail";
+
+  } catch {
+    document.getElementById("subCount").innerText = "No disponible";
   }
 }
 
-// mantener modo al recargar
-if(localStorage.getItem("desktopMode") === "on"){
-  document.body.classList.add("desktop-mode");
+getSubs();
+
+/* TWITCH */
+const channel = "litaxvt";
+const parent = window.location.hostname;
+
+document.getElementById("twitchFrame").src =
+`https://player.twitch.tv/?channel=${channel}&parent=${parent}`;
+
+/* MODO PC REAL */
+function setDesktop(){
+  localStorage.setItem("viewMode", "desktop");
+  location.reload();
+}
+
+function setMobile(){
+  localStorage.setItem("viewMode", "mobile");
+  location.reload();
+}
+
+const mode = localStorage.getItem("viewMode");
+const viewport = document.getElementById("viewportMeta");
+
+if(mode === "desktop"){
+  viewport.setAttribute("content", "width=1200");
+}
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="es">
+<head>
+<link rel="icon" href="/Litax-Home/icon.png">
+<meta charset="UTF-8">
+<meta id="viewportMeta" name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Base Veneka</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #61267A;
+  --card: #151533;
+  --text: #eaeaff;
+  --accent: #7a6cff;
+  --accent2: #ff4d6d;
+}
+
+.light {
+  --bg: #94A8FF;
+  --card: #ffffff;
+  --text: #111;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Montserrat', sans-serif;
+  scroll-behavior: smooth;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+/* CARDS ANIMADAS */
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s ease;
+}
+
+.card.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* BOTONES */
+.btn {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: white;
+  margin: 5px;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 10px #7a6cff88;
+}
+
+.desktop-btn {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  background: var(--accent2);
+}
+
+.toggle {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.character {
+  width: 120px;
+  margin: 10px;
+  transition: all 0.3s ease;
+}
+
+.character:hover {
+  transform: scale(1.15) rotate(2deg);
+}
+
+/* SUBS */
+#subCount {
+  font-size: 40px;
+  text-align: center;
+  color: var(--accent2);
+}
+</style>
+</head>
+
+<body>
+
+<div class="toggle" onclick="toggleTheme()">🌙</div>
+
+<div class="container">
+
+<h1>Base Veneka de Litax</h1>
+
+<div class="card">
+  <h2>Redes</h2>
+  <a class="btn" href="https://youtube.com/@litaxvnz" target="_blank">YouTube</a>
+  <a class="btn" href="https://www.twitch.tv/litaxvt" target="_blank">Twitch</a>
+  <a class="btn" href="https://TU_BLOG.blogspot.com">Blog</a>
+</div>
+
+<div class="card">
+  <h2>Suscriptores</h2>
+  <h1 id="subCount">Cargando...</h1>
+</div>
+
+<div class="card">
+  <h2>Último video</h2>
+  <iframe id="ytVideo" width="100%" height="450" allowfullscreen></iframe>
+</div>
+
+<div class="card">
+  <h2>Playlist</h2>
+  <iframe width="100%" height="400"
+  src="https://www.youtube.com/embed/videoseries?list=PLmBkpW2h0oj_rFvsPGHNmVXxQsWFCF0Fg"
+  allowfullscreen>
+  </iframe>
+</div>
+
+<div class="card">
+  <h2>En vivo</h2>
+  <iframe id="twitchFrame" height="400" width="100%"></iframe>
+</div>
+
+<div class="card">
+  <h2>Animes XD</h2>
+  <img class="character" src="134767.png">
+  <img class="character" src="162724.png">
+  <img class="character" src="IMG_20251123_154708_268.png">
+</div>
+
+<div class="card">
+  <h2>Navegación</h2>
+
+  <a class="btn" href="https://TU_BLOG.blogspot.com">📝 Cosas de Litax</a>
+
+  <a class="btn desktop-btn" onclick="setDesktop()">🖥 Ver como computadora</a>
+
+  <a class="btn desktop-btn" onclick="setMobile()" style="background:#555;">
+    📱 Volver a móvil
+  </a>
+
+  <a class="btn desktop-btn" style="background:#5865F2;">
+    💬 Discord (Próximamente)
+  </a>
+</div>
+
+</div>
+
+<script>
+function toggleTheme() {
+  document.body.classList.toggle("light");
+}
+
+/* ANIMACIONES SCROLL */
+const cards = document.querySelectorAll(".card");
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add("show");
+    }
+  });
+});
+
+cards.forEach(card => observer.observe(card));
+
+/* VIDEO */
+const channelID = "UC2dwyoEYWTsuUprHKU30s4g";
+
+fetch(`https://api.rss2json.com/v1/api.json?rss_url=https://www.youtube.com/feeds/videos.xml?channel_id=${channelID}`)
+.then(res => res.json())
+.then(data => {
+  const videoId = data.items[0].link.split("v=")[1];
+  document.getElementById("ytVideo").src =
+    "https://www.youtube.com/embed/" + videoId;
+});
+
+/* SUBS */
+function animateCount(finalNumber){
+  let current = 0;
+  const increment = finalNumber / 50;
+
+  const interval = setInterval(() => {
+    current += increment;
+    if(current >= finalNumber){
+      current = finalNumber;
+      clearInterval(interval);
+    }
+    document.getElementById("subCount").innerText =
+      Math.floor(current).toLocaleString();
+  }, 20);
+}
+
+async function getSubs() {
+  try {
+    const res = await fetch(`https://api.socialcounts.org/youtube-live-subscriber-count/${channelID}`);
+    const data = await res.json();
+
+    if(data.est_sub_count){
+      animateCount(data.est_sub_count);
+      return;
+    }
+
+    throw "fail";
+
+  } catch {
+    document.getElementById("subCount").innerText = "No disponible";
+  }
+}
+
+getSubs();
+
+/* TWITCH */
+const channel = "litaxvt";
+const parent = window.location.hostname;
+
+document.getElementById("twitchFrame").src =
+`https://player.twitch.tv/?channel=${channel}&parent=${parent}`;
+
+/* MODO PC REAL */
+function setDesktop(){
+  localStorage.setItem("viewMode", "desktop");
+  location.reload();
+}
+
+function setMobile(){
+  localStorage.setItem("viewMode", "mobile");
+  location.reload();
+}
+
+const mode = localStorage.getItem("viewMode");
+const viewport = document.getElementById("viewportMeta");
+
+if(mode === "desktop"){
+  viewport.setAttribute("content", "width=1200");
 }
 </script>
 
