@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Base Veneka</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #0d0b1f;
+  --card: #151533;
+  --text: #eaeaff;
+  --accent: #7a6cff;
+  --accent2: #ff4d6d;
+}
+
+.light {
+  --bg: #f5f5ff;
+  --card: #ffffff;
+  --text: #111;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Montserrat', sans-serif;
+  transition: 0.3s;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  font-weight: 700;
+}
+
+.card {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.6s ease;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent2);
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 15px;
+  border-radius: 12px;
+  background: var(--accent);
+  color: white;
+  margin: 5px;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.toggle {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.character {
+  width: 120px;
+  margin: 10px;
+  transition: 0.3s;
+}
+
+.character:hover {
+  transform: scale(1.1);
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(10px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+@media (max-width: 600px) {
+  .character {
+    width: 80px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="toggle" onclick="toggleTheme()">🌙</div>
+
+<div class="container">
+
+<h1>Base Veneka</h1>
+
+<div class="card">
+  <h2>Redes</h2>
+  <a class="btn" href="https://youtube.com/@litaxvnz" target="_blank">YouTube</a>
+  <a class="btn" href="https://www.twitch.tv/litaxvt" target="_blank">Twitch</a>
+  <a class="btn" href="https://TU_BLOG.blogspot.com">Blog</a>
+</div>
+
+<div class="card">
+  <h2>Último video</h2>
+  <iframe id="latestVideo" width="100%" height="315" allowfullscreen></iframe>
+</div>
+
+<div class="card">
+  <h2>Playlist</h2>
+  <iframe width="100%" height="200"
+  src="https://www.youtube.com/embed/videoseries?list=PLmBkpW2h0oj_rFvsPGHNmVXxQsWFCF0Fg">
+  </iframe>
+</div>
+
+<div class="card">
+  <h2>En vivo</h2>
+  <iframe
+  src="https://player.twitch.tv/?channel=litaxvt&parent=craxkerssj.github.io"
+  height="300"
+  width="100%">
+  </iframe>
+</div>
+
+<div class="card">
+  <h2>Referencias</h2>
+  <img class="character" src="callofthenight.png">
+  <img class="character" src="nazokanojo.png">
+</div>
+
+<div class="card">
+  <h2>Ir al blog</h2>
+  <a class="btn" href="https://TU_BLOG.blogspot.com">Cosas de Litax</a>
+</div>
+
+</div>
+
+<script>
+function toggleTheme() {
+  document.body.classList.toggle("light");
+}
+
+// Último video automático (simple)
+const channelID = "TU_CHANNEL_ID";
+
+fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelID}`)
+.then(response => response.text())
+.then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+.then(data => {
+  const videoId = data.querySelector("entry > id").textContent.split(":")[2];
+  document.getElementById("latestVideo").src =
+    "https://www.youtube.com/embed/" + videoId;
+});
+</script>
+
+</body>
+</html>
